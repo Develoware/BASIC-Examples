@@ -1,0 +1,347 @@
+Partial Class Form1
+    Inherits System.Windows.Forms.Form
+
+    'Form overrides dispose to clean up the component list.
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+        Try
+            If disposing AndAlso components IsNot Nothing Then
+                components.Dispose()
+            End If
+        Finally
+            MyBase.Dispose(disposing)
+        End Try
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    <System.Diagnostics.DebuggerStepThrough()> _
+    Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Me.wallTop = New System.Windows.Forms.PictureBox()
+        Me.wallDown = New System.Windows.Forms.PictureBox()
+        Me.wallLeft = New System.Windows.Forms.PictureBox()
+        Me.wallRight = New System.Windows.Forms.PictureBox()
+        Me.theBall = New System.Windows.Forms.PictureBox()
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
+        CType(Me.wallTop, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.wallDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.wallLeft, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.wallRight, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.theBall, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SuspendLayout()
+        '
+        'wallTop
+        '
+        Me.wallTop.BackColor = System.Drawing.Color.Red
+        Me.wallTop.Location = New System.Drawing.Point(-15, -1)
+        Me.wallTop.Name = "wallTop"
+        Me.wallTop.Size = New System.Drawing.Size(699, 18)
+        Me.wallTop.TabIndex = 0
+        Me.wallTop.TabStop = False
+        '
+        'wallDown
+        '
+        Me.wallDown.BackColor = System.Drawing.Color.Red
+        Me.wallDown.Location = New System.Drawing.Point(-15, 577)
+        Me.wallDown.Name = "wallDown"
+        Me.wallDown.Size = New System.Drawing.Size(768, 19)
+        Me.wallDown.TabIndex = 1
+        Me.wallDown.TabStop = False
+        '
+        'wallLeft
+        '
+        Me.wallLeft.BackColor = System.Drawing.Color.Red
+        Me.wallLeft.Location = New System.Drawing.Point(-2, 12)
+        Me.wallLeft.Name = "wallLeft"
+        Me.wallLeft.Size = New System.Drawing.Size(20, 569)
+        Me.wallLeft.TabIndex = 2
+        Me.wallLeft.TabStop = False
+        '
+        'wallRight
+        '
+        Me.wallRight.BackColor = System.Drawing.Color.Red
+        Me.wallRight.Location = New System.Drawing.Point(661, 12)
+        Me.wallRight.Name = "wallRight"
+        Me.wallRight.Size = New System.Drawing.Size(23, 569)
+        Me.wallRight.TabIndex = 3
+        Me.wallRight.TabStop = False
+        '
+        'theBall
+        '
+        Me.theBall.BackColor = System.Drawing.Color.Yellow
+        Me.theBall.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.theBall.Cursor = System.Windows.Forms.Cursors.Cross
+        Me.theBall.Location = New System.Drawing.Point(315, 283)
+        Me.theBall.Name = "theBall"
+        Me.theBall.Size = New System.Drawing.Size(44, 43)
+        Me.theBall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.theBall.TabIndex = 4
+        Me.theBall.TabStop = False
+        Me.theBall.WaitOnLoad = True
+        '
+        'Form1
+        '
+        Me.AllowDrop = True
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.ClientSize = New System.Drawing.Size(685, 595)
+        Me.Controls.Add(Me.theBall)
+        Me.Controls.Add(Me.wallRight)
+        Me.Controls.Add(Me.wallLeft)
+        Me.Controls.Add(Me.wallDown)
+        Me.Controls.Add(Me.wallTop)
+        Me.Cursor = System.Windows.Forms.Cursors.Cross
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.ImeMode = System.Windows.Forms.ImeMode.AlphaFull
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
+        Me.Name = "Form1"
+        Me.Opacity = 0.7R
+        Me.Text = "Form1"
+        CType(Me.wallTop, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.wallDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.wallLeft, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.wallRight, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.theBall, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
+
+    End Sub
+
+    Friend WithEvents wallTop As PictureBox
+    Friend WithEvents wallDown As PictureBox
+    Friend WithEvents wallLeft As PictureBox
+    Friend WithEvents wallRight As PictureBox
+    Friend WithEvents theBall As PictureBox
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    ' System Code Ends
+    ' My Code Starts Here
+    Dim isHitTop As Boolean = False
+    Dim isHitBottom As Boolean = False
+    Dim isHitRight As Boolean = False
+    Dim isHitLeft As Boolean = False
+    Dim velocityVerti As Integer = 1
+    Dim velocityHoriz As Integer = 1
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents Timer2 As Timer
+
+
+    Private Sub Form1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        Dim var As Char = e.KeyChar
+        var = CType(var, String)
+        Dim loop1 As Double = 0
+
+        If var = "W" Or var = "w" Then
+            theBall.Top = theBall.Top - velocityVerti
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.55
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.08
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top - velocityVerti
+        ElseIf var = "A" Or var = "a" Then
+
+            theBall.Left = theBall.Left - velocityHoriz
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.55
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.08
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left - velocityHoriz
+
+        ElseIf var = "S" Or var = "s" Then
+
+            theBall.Top = theBall.Top - velocityVerti
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.55
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.08
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Top = theBall.Top + velocityVerti
+
+        ElseIf var = "D" Or var = "d" Then
+            theBall.Left = theBall.Left + velocityHoriz
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.55
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.5
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.45
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.4
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.35
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.3
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.25
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.2
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.15
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.1
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.08
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz - 0.05
+            System.Threading.Thread.Sleep(10)
+            theBall.Left = theBall.Left + velocityHoriz
+        ElseIf var = "Enter" Then
+                MsgBox("Hello")
+            End If
+
+
+
+    End Sub
+
+
+End Class
